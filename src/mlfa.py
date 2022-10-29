@@ -45,8 +45,8 @@ def W_OLS(X, Y):
 ###############################################################################
 
 # Estimate W by Single-Layer Perceptron
-def W_SLP(X, Y, LR, maxEpoch):
-    return _W_SLP_Multiclass(X, Y, LR, maxEpoch)
+def W_SLP(X, Y, LR, ME):
+    return _W_SLP_Multiclass(X, Y, LR, ME)
 
 ###############################################################################
 
@@ -87,9 +87,14 @@ def Y_SLP(W, X):
 ###############################################################################
 
 # Estimate Y by Multi-Layer Perceptron
-def W_MLP(W, X):
+def Y_MLP(W, X):
     pass
 
+###############################################################################
+# PRIVATE ALGORITHMS FOR THE ACTUAL BUSINESS LOGIC
+#
+# The public interface above are just some wrappers for standardize the API
+# Below is the core logic, where the hard work is actually done (heavy work?)
 ###############################################################################
 
 # Regression applying the formula of Ordinary Least Squares (OLS)
