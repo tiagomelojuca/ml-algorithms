@@ -90,3 +90,135 @@ def D6V6PADRAO_showData():
     plt.show()
 
 ###############################################################################
+
+def DUMMYMULTICLS_getData():
+    X = np.array([
+        [2.5, 0.0], # DUMMY SANPLE FOR CLASS 1
+        [2.3, 0.7], # DUMMY SANPLE FOR CLASS 1
+        [2.1, 0.3], # DUMMY SANPLE FOR CLASS 1
+        [2.7, 0.3], # DUMMY SANPLE FOR CLASS 1
+        [2.9, 0.1], # DUMMY SANPLE FOR CLASS 1
+        [2.2, 0.5], # DUMMY SANPLE FOR CLASS 1
+        [2.7, 0.2], # DUMMY SANPLE FOR CLASS 1
+        [2.3, 0.1], # DUMMY SANPLE FOR CLASS 1
+        [2.5, 0.6], # DUMMY SANPLE FOR CLASS 1
+        [2.2, 0.9], # DUMMY SANPLE FOR CLASS 1
+
+        [0.0, 3.0], # DUMMY SANPLE FOR CLASS 2
+        [0.2, 3.7], # DUMMY SANPLE FOR CLASS 2
+        [0.9, 3.1], # DUMMY SANPLE FOR CLASS 2
+        [0.3, 3.3], # DUMMY SANPLE FOR CLASS 2
+        [0.2, 3.5], # DUMMY SANPLE FOR CLASS 2
+        [0.5, 3.3], # DUMMY SANPLE FOR CLASS 2
+        [0.4, 3.9], # DUMMY SANPLE FOR CLASS 2
+        [0.3, 3.7], # DUMMY SANPLE FOR CLASS 2
+        [0.9, 3.6], # DUMMY SANPLE FOR CLASS 2
+        [0.1, 3.4], # DUMMY SANPLE FOR CLASS 2
+
+        [6.5, 1.5], # DUMMY SANPLE FOR CLASS 3
+        [6.2, 1.3], # DUMMY SANPLE FOR CLASS 3
+        [6.1, 1.5], # DUMMY SANPLE FOR CLASS 3
+        [6.0, 1.4], # DUMMY SANPLE FOR CLASS 3
+        [6.6, 1.2], # DUMMY SANPLE FOR CLASS 3
+        [6.0, 1.7], # DUMMY SANPLE FOR CLASS 3
+        [6.8, 1.9], # DUMMY SANPLE FOR CLASS 3
+        [6.3, 1.3], # DUMMY SANPLE FOR CLASS 3
+        [6.1, 1.4], # DUMMY SANPLE FOR CLASS 3
+        [6.4, 1.6], # DUMMY SANPLE FOR CLASS 3
+
+        [3.4, 6.0], # DUMMY SANPLE FOR CLASS 4
+        [3.0, 6.2], # DUMMY SANPLE FOR CLASS 4
+        [3.7, 6.0], # DUMMY SANPLE FOR CLASS 4
+        [3.4, 6.6], # DUMMY SANPLE FOR CLASS 4
+        [3.7, 6.1], # DUMMY SANPLE FOR CLASS 4
+        [3.2, 6.7], # DUMMY SANPLE FOR CLASS 4
+        [3.0, 6.1], # DUMMY SANPLE FOR CLASS 4
+        [3.1, 6.3], # DUMMY SANPLE FOR CLASS 4
+        [3.0, 6.8], # DUMMY SANPLE FOR CLASS 4
+        [3.5, 6.7], # DUMMY SANPLE FOR CLASS 4
+
+        [6.1, 4.5], # DUMMY SANPLE FOR CLASS 5
+        [6.5, 4.6], # DUMMY SANPLE FOR CLASS 5
+        [6.2, 4.5], # DUMMY SANPLE FOR CLASS 5
+        [6.2, 4.8], # DUMMY SANPLE FOR CLASS 5
+        [6.6, 4.5], # DUMMY SANPLE FOR CLASS 5
+        [6.0, 4.8], # DUMMY SANPLE FOR CLASS 5
+        [6.6, 4.5], # DUMMY SANPLE FOR CLASS 5
+        [6.8, 4.9], # DUMMY SANPLE FOR CLASS 5
+        [6.3, 4.8], # DUMMY SANPLE FOR CLASS 5
+        [6.1, 4.9], # DUMMY SANPLE FOR CLASS 5
+    ])
+
+    Y = np.array([
+        [ 1, -1, -1, -1, -1],
+        [ 1, -1, -1, -1, -1],
+        [ 1, -1, -1, -1, -1],
+        [ 1, -1, -1, -1, -1],
+        [ 1, -1, -1, -1, -1],
+        [ 1, -1, -1, -1, -1],
+        [ 1, -1, -1, -1, -1],
+        [ 1, -1, -1, -1, -1],
+        [ 1, -1, -1, -1, -1],
+        [ 1, -1, -1, -1, -1],
+
+        [-1,  1, -1, -1, -1],
+        [-1,  1, -1, -1, -1],
+        [-1,  1, -1, -1, -1],
+        [-1,  1, -1, -1, -1],
+        [-1,  1, -1, -1, -1],
+        [-1,  1, -1, -1, -1],
+        [-1,  1, -1, -1, -1],
+        [-1,  1, -1, -1, -1],
+        [-1,  1, -1, -1, -1],
+        [-1,  1, -1, -1, -1],
+
+        [-1, -1,  1, -1, -1],
+        [-1, -1,  1, -1, -1],
+        [-1, -1,  1, -1, -1],
+        [-1, -1,  1, -1, -1],
+        [-1, -1,  1, -1, -1],
+        [-1, -1,  1, -1, -1],
+        [-1, -1,  1, -1, -1],
+        [-1, -1,  1, -1, -1],
+        [-1, -1,  1, -1, -1],
+        [-1, -1,  1, -1, -1],
+
+        [-1, -1, -1,  1, -1],
+        [-1, -1, -1,  1, -1],
+        [-1, -1, -1,  1, -1],
+        [-1, -1, -1,  1, -1],
+        [-1, -1, -1,  1, -1],
+        [-1, -1, -1,  1, -1],
+        [-1, -1, -1,  1, -1],
+        [-1, -1, -1,  1, -1],
+        [-1, -1, -1,  1, -1],
+        [-1, -1, -1,  1, -1],
+
+        [-1, -1, -1, -1,  1],
+        [-1, -1, -1, -1,  1],
+        [-1, -1, -1, -1,  1],
+        [-1, -1, -1, -1,  1],
+        [-1, -1, -1, -1,  1],
+        [-1, -1, -1, -1,  1],
+        [-1, -1, -1, -1,  1],
+        [-1, -1, -1, -1,  1],
+        [-1, -1, -1, -1,  1],
+        [-1, -1, -1, -1,  1],
+    ])
+
+    return (X, Y)
+
+###############################################################################
+
+def DUMMYMULTICLS_showData():
+    X, Y = DUMMYMULTICLS_getData()
+    plt.scatter(X[ 0 : 10, 0], X[ 0 : 10, 1], color = "blue" )
+    plt.scatter(X[10 : 20, 0], X[10 : 20, 1], color = "red"  )
+    plt.scatter(X[20 : 30, 0], X[20 : 30, 1], color = "green")
+    plt.scatter(X[30 : 40, 0], X[30 : 40, 1], color = "pink")
+    plt.scatter(X[40 : 50, 0], X[40 : 50, 1], color = "orange")
+    plt.xlim((-1, 7))
+    plt.ylim((-1, 7))
+    plt.show()
+
+###############################################################################
