@@ -12,6 +12,7 @@
 # when I'm not sure if it fits a particular concept
 ###############################################################################
 import sys
+import math
 import numpy as np
 ###############################################################################
 # PUBLIC ALGORITHMS FOR TRAINING THE MODEL
@@ -132,7 +133,7 @@ def _W_SLP_Binary(X, Y, LR, maxEpoch):
             x_t.shape = (x_t.shape[0], 1)
 
             u_t = W.T @ x_t
-            y_t = _heaviside(u_t)
+            y_t = _shl(u_t)
             
             d_t = int(Y[i, 0])
 
@@ -162,6 +163,11 @@ def _W_SLP_Multiclass(X, Y, LR, maxEpoch):
         W = np.concatenate((W, _W), axis = 1)
     
     return W
+
+###############################################################################
+
+def _W_MLP():
+    pass
 
 ###############################################################################
 # HELPERS SHOULD BE PRIVATE...
@@ -244,14 +250,58 @@ def _y(Y, i):
 
     y = np.empty((numberOfSamples, 1))
     for row in range(numberOfSamples):
-        y[row] = _heaviside(Y[row, i])
+        y[row] = _shl(Y[row, i])
 
     return y
 
 ###############################################################################
 
-# sign function, used as activation function
-def _heaviside(num):
+# element-wise product
+def _hadamard_product(u, v):
+    return u * v
+
+def _outer_product(u, v):
+    return u @ v.T
+
+###############################################################################
+
+# symmetric hard limit (hardlims), used as activation function
+def _shl(num):
     return 1 if num >= 0 else -1
+
+###############################################################################
+
+# tangent hyperbolic function, used as activation function
+def _tanh(x):
+    return np.tanh(x)
+    ex1 = math.exp( x)
+    ex2 = math.exp(-x)
+    num = ex1 - ex2
+    den = ex1 + ex2
+    res = num / den
+    return res
+
+# apply tanh for a entire vector
+def _tanh_vec(_vec):
+    i = 0
+    for i in range(_vec.shape[0]):
+        _oldval = _vec[i, 0]
+        _newval = _tanh(_oldval)
+        _vec[i, 0] = _newval
+    return _vec
+
+# derivative of hyperbolic tangent function
+def _ddxtanh(x):
+    sech = 2.0 / (math.exp(x) + math.exp(-x))
+    return sech * sech
+
+# apply ddxtanh for a entire vector
+def _ddxtanh_vec(_vec):
+    i = 0
+    for i in range(_vec.shape[0]):
+        _oldval = _vec[i, 0]
+        _newval = _ddxtanh(_oldval)
+        _vec[i, 0] = _newval
+    return _vec
 
 ###############################################################################
