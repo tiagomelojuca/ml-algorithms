@@ -56,11 +56,12 @@ def W_SLP(X, Y, LR, ME):
 
 # Estimate W by Multi-Layer Perceptron
 def W_MLP(X, Y, NHL, NOL, LR, ME, TOL):
-    X = _normalize_samples_minmax(X)
-    X = X.T
-    Y = Y.T
-    X = _addLineOfValueTo(-1, X)
-    weightsLayers = _W_MLP(X, Y, NHL, NOL, LR, ME, TOL)
+    _X = X.copy()
+    _Y = Y.copy()
+    _X = _X.T
+    _Y = _Y.T
+    _X = _addLineOfValueTo(-1, _X)
+    weightsLayers = _W_MLP(_X, _Y, NHL, NOL, LR, ME, TOL)
 
     return weightsLayers
 
@@ -232,6 +233,7 @@ def _W_MLP_train(X, Y, LR, ME, TOL, layersW, layersI, layersY, layersD):
             d.shape = (d.shape[0], 1)
             layersW, layersI, layersY, layersD = _W_MLP_backward(layersW, layersI, layersY, layersD, LR, x, d)
         _, layersI, layersY, eqm = _W_MLP_EQM(layersW, layersI, layersY, X, Y)
+        # print("t = " + str(t) + " | eqm = " + str(eqm))
         t += 1
     
     return layersW, layersI, layersY, layersD
