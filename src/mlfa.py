@@ -308,7 +308,7 @@ def _W_MLP_ddxg(i):
 def _Y_MLP(layersW, X):
     layersI, layersY = _Y_MLP_initLayers(layersW)
 
-    Ypred = np.empty((0, 5))
+    Ypred = np.empty((0, layersY[-1].shape[0]))
     for i in range(X.shape[0]):
         x = X[i, :]
         x.shape = (1, X.shape[1])
