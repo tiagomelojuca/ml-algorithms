@@ -479,6 +479,7 @@ def _normalize_samples_local(X):
         x[0, 1] /= norma
     return X
 
+# according to professor, it's the better one to use with tanh
 def _normalize_samples_minmax(X):
     min_X = X.min()
     max_X = X.max()
