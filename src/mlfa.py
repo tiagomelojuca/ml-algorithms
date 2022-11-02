@@ -262,6 +262,7 @@ def _W_MLP_backward(layersW, layersI, layersY, layersD, LR, x, d):
 
     return layersW, layersI, layersY, layersD
 
+# mean squared error (MSE)
 def _W_MLP_EQM(layersW, layersI, layersY, X, Y):
     numberOfSamples = X.shape[1]
 
@@ -274,10 +275,10 @@ def _W_MLP_EQM(layersW, layersI, layersY, X, Y):
         d.shape = (d.shape[0], 1)
         eqi = 0
         neuronsOutputLayer = layersI[-1].shape[0]
-        _Y = layersY[-1]
+        _y = layersY[-1]
         j = 0
         for j in range(neuronsOutputLayer):
-            err = d[j, 0] - _Y[j, 0]
+            err = d[j, 0] - _y[j, 0]
             eqi += err * err
             j += 1
         eqm += eqi
