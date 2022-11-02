@@ -300,8 +300,8 @@ def CMUFACEIMAGES_getData(Red):
             ROT = -np.ones((QtdIndividuos, 1))
             ROT[i, 0] = 1
 
-            cv2.imshow("Foto", PgmImg)
-            cv2.waitKey(0)
+            # cv2.imshow("Foto", PgmImg)
+            # cv2.waitKey(0)
 
             VectorNormalized.shape = (len(VectorNormalized), 1)
             X = np.append(X, VectorNormalized, axis = 1)
