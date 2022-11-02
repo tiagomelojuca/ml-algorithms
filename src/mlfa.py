@@ -166,8 +166,151 @@ def _W_SLP_Multiclass(X, Y, LR, maxEpoch):
 
 ###############################################################################
 
-def _W_MLP():
-    pass
+# X : (P + 1) x N
+# Y : C x N
+# NHL : neuronsHiddenLayers
+# NOL : neuronsOutputLayers
+# TOL : tolerance / prec(ision)
+def _W_MLP(X, Y, NHL, NOL, LR, ME, TOL):
+    numEntriesIL, numLayers, neuronsLayers = _W_MLP_parseInfo(X, NHL, NOL)
+    lW, lI, lY, lD = _W_MLP_initLayers(numLayers, neuronsLayers, numEntriesIL)
+    lW, lI, lY, lD = _W_MLP_train(X, Y, LR, ME, TOL, lW, lI, lY, lD)
+
+    return lW
+
+def _W_MLP_parseInfo(X, NHL, NOL):
+    numberOfSignalsInputLayer = X.shape[0] - 1 # minus 1 due to bias
+    neuronsPerLayer = NHL.copy()
+    neuronsPerLayer.append(NOL)
+    numberOfLayers = len(neuronsPerLayer)
+
+    return numberOfSignalsInputLayer, numberOfLayers, neuronsPerLayer
+
+def _W_MLP_initLayers(numberOfLayers, neuronsPerLayer, numberOfSignalsInputLayer):
+    LAYERS_W = []
+    LAYERS_I = []
+    LAYERS_Y = []
+    LAYERS_D = []
+
+    for i in range(numberOfLayers):
+        neuronsCurrentLayer  = neuronsPerLayer[i]
+        numInputsWithoutBias = numberOfSignalsInputLayer if i == 0 else neuronsPerLayer[i - 1]
+        numInputs            = numInputsWithoutBias + 1
+
+        LAYERS_W.append(np.random.random_sample((neuronsCurrentLayer, numInputs)) - 0.5)
+        LAYERS_I.append(np.empty((neuronsCurrentLayer, 1)))
+        LAYERS_Y.append(np.empty((neuronsCurrentLayer, 1)))
+        LAYERS_D.append(np.empty((neuronsCurrentLayer, 1)))
+
+    return LAYERS_W, LAYERS_I, LAYERS_Y, LAYERS_D
+
+def _W_MLP_train(X, Y, LR, ME, TOL, layersW, layersI, layersY, layersD):
+    eqm = 1
+    t = 0
+    while eqm > TOL and t < ME:
+        numSamples = X.shape[1]
+        for i in range(numSamples):
+            x = X[:, i]
+            x.shape = (x.shape[0], 1)
+            _, layersI, layersY = _W_MLP_forward(layersW, layersI, layersY, x)
+            d = Y[:, i]
+            d.shape = (d.shape[0], 1)
+            layersW, layersI, layersY, layersD = _W_MLP_backward(layersW, layersI, layersY, layersD, LR, x, d)
+        _, layersI, layersY, eqm = _W_MLP_EQM(layersW, layersI, layersY, X, Y)
+        t += 1
+    
+    return layersW, layersI, layersY, layersD
+
+def _W_MLP_forward(layersW, layersI, layersY, x):
+    j = 0
+    for j in range(len(layersW)):
+        if j == 0:
+            layersI[j] = layersW[j] @ x
+        else:
+            ybias = _addLineOfValueTo(-1, layersY[j - 1])
+            layersI[j] = layersW[j] @ ybias
+        layersY[j] = _W_MLP_g(layersI[j])
+        j += 1
+    return layersW, layersI, layersY
+
+def _W_MLP_backward(layersW, layersI, layersY, layersD, LR, x, d):
+    j = len(layersW) - 1
+    while j >= 0:
+        if j + 1 == len(layersW):
+            layersD[j] = _hadamard_product(_W_MLP_ddxg(layersI[j]), (d - layersY[j]))
+            ybias = _addLineOfValueTo(-1, layersY[j - 1])
+            layersW[j] = layersW[j] + LR * _outer_product(layersD[j], ybias)
+        elif j == 0:
+            _W = layersW[j + 1]
+            _W_without_bias = _W[:, 1:]
+            Wb = _W_without_bias.T
+            layersD[j] = _hadamard_product(_W_MLP_ddxg(layersI[j]), (Wb @ layersD[j + 1]))
+            layersW[j] = layersW[j] + LR * _outer_product(layersD[j], x)
+        else:
+            _W = layersW[j + 1]
+            _W_without_bias = _W[:, 1:]
+            Wb = _W_without_bias.T
+            layersD[j] = _hadamard_product(_W_MLP_ddxg(layersI[j]), (Wb @ layersD[j + 1]))
+            ybias = _addLineOfValueTo(-1, layersY[j - 1])
+            layersW[j] = layersW[j] + LR * _outer_product(layersD[j], ybias)
+        j -= 1
+
+    return layersW, layersI, layersY, layersD
+
+def _W_MLP_EQM(layersW, layersI, layersY, X, Y):
+    numberOfSamples = X.shape[1]
+
+    eqm = 0
+    for i in range(numberOfSamples):
+        x = X[:, i]
+        x.shape = (x.shape[0], 1)
+        _, layersI, layersY = _W_MLP_forward(layersW, layersI, layersY, x)
+        d = Y[:, i]
+        d.shape = (d.shape[0], 1)
+        eqi = 0
+        neuronsOutputLayer = layersI[-1].shape[0]
+        _Y = layersY[-1]
+        j = 0
+        for j in range(neuronsOutputLayer):
+            err = d[j, 0] - _Y[j, 0]
+            eqi += err * err
+            j += 1
+        eqm += eqi
+    eqm /= 2 * numberOfSamples
+
+    return layersW, layersI, layersY, eqm
+
+def _W_MLP_g(i):
+    return _tanh(i)
+
+def _W_MLP_ddxg(i):
+    return _ddxtanh_vec(i)
+
+# X : N x P
+def _Y_MLP(X, layersW):
+    layersI, layersY = _Y_MLP_initLayers(layersW)
+
+    Ypred = np.empty((0, 5))
+    for i in range(X.shape[0]):
+        x = X[i, :]
+        x.shape = (1, X.shape[1])
+        x = _addLineOfValueTo(-1, x.T)
+        _, _, _Y = _W_MLP_forward(layersW, layersI, layersY, x)
+        _Ypred = _Y[-1].T
+        Ypred = np.concatenate((Ypred, _Ypred), axis=0)
+
+    return Ypred
+
+def _Y_MLP_initLayers(layersW):
+    layersI = []
+    layersY = []
+    
+    for i in range(len(layersW)):
+        neuronsCurrentLayer = layersW[i].shape[0]
+        layersI.append(np.empty((neuronsCurrentLayer, 1)))
+        layersY.append(np.empty((neuronsCurrentLayer, 1)))
+
+    return layersI, layersY
 
 ###############################################################################
 # HELPERS SHOULD BE PRIVATE...
