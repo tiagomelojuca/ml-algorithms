@@ -286,7 +286,7 @@ def _W_MLP_EQM(layersW, layersI, layersY, X, Y):
     return layersW, layersI, layersY, eqm
 
 def _W_MLP_g(i):
-    return _tanh(i)
+    return _tanh_vec(i)
 
 def _W_MLP_ddxg(i):
     return _ddxtanh_vec(i)
@@ -421,7 +421,7 @@ def _shl(num):
 
 # tangent hyperbolic function, used as activation function
 def _tanh(x):
-    return np.tanh(x)
+    # return np.tanh(x)
     ex1 = math.exp( x)
     ex2 = math.exp(-x)
     num = ex1 - ex2
@@ -430,7 +430,9 @@ def _tanh(x):
     return res
 
 # apply tanh for a entire vector
-def _tanh_vec(_vec):
+def _tanh_vec(vec):
+    _vec = vec.copy()
+
     i = 0
     for i in range(_vec.shape[0]):
         _oldval = _vec[i, 0]
@@ -444,7 +446,9 @@ def _ddxtanh(x):
     return sech * sech
 
 # apply ddxtanh for a entire vector
-def _ddxtanh_vec(_vec):
+def _ddxtanh_vec(vec):
+    _vec = vec.copy()
+
     i = 0
     for i in range(_vec.shape[0]):
         _oldval = _vec[i, 0]
