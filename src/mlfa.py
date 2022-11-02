@@ -56,6 +56,7 @@ def W_SLP(X, Y, LR, ME):
 
 # Estimate W by Multi-Layer Perceptron
 def W_MLP(X, Y, NHL, NOL, LR, ME, TOL):
+    X = _normalize_samples_minmax(X)
     X = X.T
     Y = Y.T
     X = _addLineOfValueTo(-1, X)
@@ -477,5 +478,20 @@ def _normalize_samples_local(X):
         x[0, 0] /= norma
         x[0, 1] /= norma
     return X
+
+def _normalize_samples_minmax(X):
+    min_X = X.min()
+    max_X = X.max()
+    gap_X = max_X - min_X
+
+    _X = X.copy()
+    for i in range(_X.shape[0]):
+        for j in range(_X.shape[1]):
+            xj = _X[i, j]
+            xj_norm = (xj - min_X) / gap_X
+            xj_norm = 2 * xj_norm - 1
+            _X[i, j] = xj_norm
+    
+    return _X
 
 ###############################################################################
