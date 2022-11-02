@@ -39,9 +39,12 @@ import numpy as np
 ###############################################################################
 
 # Estimate W by Ordinary Least Squares
-def W_OLS(X, Y):
+def W_OLS(X, Y, RP = -1):
     _X = _addColumnOfValueTo(1, X)
-    return _W_OLS_Calculate(_X, Y)
+    if RP < 0:
+        return _W_OLS_Calculate(_X, Y)
+    else:
+        return _W_OLS_Tikhonov_Regularization(_X, Y, RP)
 
 ###############################################################################
 
@@ -110,6 +113,12 @@ def Y_MLP(W, X):
 # W : Weights Matrix [(P + 1) x C]
 def _W_OLS_Calculate(X, Y):
     return np.linalg.pinv(X.T @ X) @ X.T @ Y
+
+# HP : hyperparam (ridge parameter (RP) >= 0)
+def _W_OLS_Tikhonov_Regularization(X, Y, HP):
+    XtX = X.T @ X
+    I = np.identity(XtX.shape[0])
+    return np.linalg.pinv(XtX + HP * I) @ X.T @ Y
 
 ###############################################################################
 
