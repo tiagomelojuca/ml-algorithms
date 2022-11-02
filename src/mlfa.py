@@ -221,7 +221,7 @@ def _W_MLP_initLayers(numberOfLayers, neuronsPerLayer, numberOfSignalsInputLayer
     return LAYERS_W, LAYERS_I, LAYERS_Y, LAYERS_D
 
 def _W_MLP_train(X, Y, LR, ME, TOL, layersW, layersI, layersY, layersD):
-    eqm = 1
+    eqm = TOL * 1.1
     t = 0
     while eqm > TOL and t < ME:
         numSamples = X.shape[1]
@@ -381,21 +381,21 @@ def _argmax(Yel):
 
 ###############################################################################
 
-def _calcAccuracy(Y, Ypred):
-    if len(Y) != len(Ypred):
+def _calcAccuracy(Ytest, Ypred):
+    if len(Ytest) != len(Ypred):
         return 0.0
 
     i = 0
     hits = 0
-    total = len(Y)
+    total = len(Ytest)
     for i in range(total):
         # print("Ypred = " + str(Ypred[i]) + " | Ytest = " + str(Ytest[i]))
-        # print("Ypred = " + str(argmax(Ypred[i])) + " | Ytest = " + str(argmax(Ytest[i])))
-        if _argmax(Ypred[i]) == _argmax(Y[i]):
+        # print("Ypred = " + str(_argmax(Ypred[i])) + " | Ytest = " + str(_argmax(Ytest[i])))
+        if _argmax(Ypred[i]) == _argmax(Ytest[i]):
             hits += 1
     accuracy = hits / total
     
-    return accuracy
+    return accuracy * 100
 
 ###############################################################################
 
