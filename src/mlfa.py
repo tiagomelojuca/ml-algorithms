@@ -52,8 +52,13 @@ def W_SLP(X, Y, LR, ME):
 ###############################################################################
 
 # Estimate W by Multi-Layer Perceptron
-def W_MLP():
-    pass
+def W_MLP(X, Y, NHL, NOL, LR, ME, TOL):
+    X = X.T
+    Y = Y.T
+    X = _addLineOfValueTo(-1, X)
+    weightsLayers = _W_MLP(X, Y, NHL, NOL, LR, ME, TOL)
+
+    return weightsLayers
 
 ###############################################################################
 # PUBLIC ALGORITHMS FOR PERFORMING PREDICTIONS
@@ -89,7 +94,7 @@ def Y_SLP(W, X):
 
 # Estimate Y by Multi-Layer Perceptron
 def Y_MLP(W, X):
-    pass
+    return _Y_MLP(W, X)
 
 ###############################################################################
 # PRIVATE ALGORITHMS FOR THE ACTUAL BUSINESS LOGIC
@@ -287,7 +292,7 @@ def _W_MLP_ddxg(i):
     return _ddxtanh_vec(i)
 
 # X : N x P
-def _Y_MLP(X, layersW):
+def _Y_MLP(layersW, X):
     layersI, layersY = _Y_MLP_initLayers(layersW)
 
     Ypred = np.empty((0, 5))
@@ -446,5 +451,17 @@ def _ddxtanh_vec(_vec):
         _newval = _ddxtanh(_oldval)
         _vec[i, 0] = _newval
     return _vec
+
+# normalised inputs by local normalization
+# see also : https://ai.stackexchange.com/questions/5928/
+#            how-to-solve-the-problem-of-too-big-activations-when-using-genetic-algorithms-to
+def _normalize_samples_local(X):
+    for i in range(X.shape[0]):
+        x = X[i, :]
+        x.shape = (1, X.shape[1])
+        norma = math.sqrt(x[0, 0] * x[0, 0] + x[0, 1] * x[0, 1])
+        x[0, 0] /= norma
+        x[0, 1] /= norma
+    return X
 
 ###############################################################################
